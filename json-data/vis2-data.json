@@ -1,9 +1,6 @@
 {
   "The Weeknd": {
     "artist(s)_name": "The Weeknd",
-    "in_spotify_playlists": 6336.382352941177,
-    "in_apple_playlists": 76.8529411764706,
-    "in_deezer_playlists": 348.0,
     "streams": 21516545916,
     "bpm": 118.79411764705883,
     "danceability_%": 59.61764705882353,
@@ -11,9 +8,6 @@
   },
   "Bad Bunny": {
     "artist(s)_name": "Bad Bunny",
-    "in_spotify_playlists": 3240.653846153846,
-    "in_apple_playlists": 41.69230769230769,
-    "in_deezer_playlists": 68.6923076923077,
     "streams": 15363784442,
     "bpm": 119.3076923076923,
     "danceability_%": 74.15384615384616,
@@ -21,9 +15,6 @@
   },
   "Ed Sheeran": {
     "artist(s)_name": "Ed Sheeran",
-    "in_spotify_playlists": 10520.461538461539,
-    "in_apple_playlists": 128.6153846153846,
-    "in_deezer_playlists": 1333.923076923077,
     "streams": 14559679731,
     "bpm": 115.0,
     "danceability_%": 71.07692307692308,
@@ -31,9 +22,6 @@
   },
   "Taylor Swift": {
     "artist(s)_name": "Taylor Swift",
-    "in_spotify_playlists": 3777.1388888888887,
-    "in_apple_playlists": 51.44444444444444,
-    "in_deezer_playlists": 87.41666666666667,
     "streams": 14423238266,
     "bpm": 124.11111111111111,
     "danceability_%": 60.0,
@@ -41,9 +29,6 @@
   },
   "Harry Styles": {
     "artist(s)_name": "Harry Styles",
-    "in_spotify_playlists": 6472.117647058823,
-    "in_apple_playlists": 102.41176470588235,
-    "in_deezer_playlists": 217.35294117647058,
     "streams": 11608645649,
     "bpm": 128.52941176470588,
     "danceability_%": 61.35294117647059,
@@ -51,9 +36,6 @@
   },
   "Eminem": {
     "artist(s)_name": "Eminem",
-    "in_spotify_playlists": 17232.333333333332,
-    "in_apple_playlists": 82.22222222222223,
-    "in_deezer_playlists": 2724.8888888888887,
     "streams": 10193727260,
     "bpm": 122.55555555555556,
     "danceability_%": 79.66666666666667,
@@ -61,9 +43,6 @@
   },
   " Bad Bunny": {
     "artist(s)_name": " Bad Bunny",
-    "in_spotify_playlists": 3807.5,
-    "in_apple_playlists": 66.57142857142857,
-    "in_deezer_playlists": 78.35714285714286,
     "streams": 8449742828,
     "bpm": 132.57142857142858,
     "danceability_%": 74.92857142857143,
@@ -71,9 +50,6 @@
   },
   "Justin Bieber": {
     "artist(s)_name": "Justin Bieber",
-    "in_spotify_playlists": 11785.666666666666,
-    "in_apple_playlists": 223.33333333333334,
-    "in_deezer_playlists": 710.3333333333334,
     "streams": 8138018785,
     "bpm": 137.66666666666666,
     "danceability_%": 65.5,
@@ -81,9 +57,6 @@
   },
   "Drake": {
     "artist(s)_name": "Drake",
-    "in_spotify_playlists": 5209.473684210527,
-    "in_apple_playlists": 72.10526315789474,
-    "in_deezer_playlists": 225.68421052631578,
     "streams": 8043031261,
     "bpm": 133.57894736842104,
     "danceability_%": 73.6842105263158,
@@ -91,9 +64,6 @@
   },
   "Imagine Dragons": {
     "artist(s)_name": "Imagine Dragons",
-    "in_spotify_playlists": 11376.4,
-    "in_apple_playlists": 108.6,
-    "in_deezer_playlists": 1461.8,
     "streams": 7719446948,
     "bpm": 114.6,
     "danceability_%": 66.4,
