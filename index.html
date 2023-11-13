@@ -1,17 +1,360 @@
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>INFO 3300 - Project 2</title>
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-  </head>
-  <body>
-    <svg height = "500" width = "500" id = "vis1"></svg>
-    <script>
-    </script>
-    <svg height = "500" width = "500" id = "vis2"></svg>
-    <script>
-      const svg2 = d3.select("svg#vis2");
-      
-    </script>
-  </body>
+
+<head>
+  <meta charset="UTF-8">
+  <title>INFO 3300 - Project 2</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+
+<style>
+  .gridlines line {
+    stroke: #bbb;
+    opacity: 0.4;
+  }
+
+  .gridlines .domain {
+    stroke: none;
+  }
+</style>
+
+<body>
+  <svg height="500" width="750" id="vis1"></svg>
+  <script>
+    d3.json('json-data/vis1-grouped-data.json').then((data) => {
+      const svg = d3.select('#vis1');
+      const width = svg.attr('width');
+      const height = svg.attr('height');
+      const margin = { top: 50, right: 170, bottom: 75, left: 75 };
+
+      const chartWidth = width - margin.left - margin.right;
+      const chartHeight = height - margin.top - margin.bottom;
+
+      let graph = svg.append("g").attr("id", "graph");
+      let chartArea = svg.append("g").attr("id", "points")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
+
+      // Axis for metrics
+      const yExtent = [50, 130];
+      const yScale = d3.scaleLinear().domain(yExtent).range([chartHeight, 0]);
+      let leftAxis = d3.axisLeft(yScale)
+      let leftGridlines = d3.axisLeft(yScale)
+        .tickSize(-chartWidth - 10)
+        .tickFormat("")
+      graph.append("g")
+        .attr("class", "y axis")
+        .attr("transform", `translate(${margin.left - 10},${margin.top})`)
+        .call(leftAxis)
+      graph.append("g")
+        .attr("class", "y gridlines")
+        .attr("transform", `translate(${margin.left - 10},${margin.top})`)
+        .call(leftGridlines);
+
+      // Axis for years
+      const dateExtent = d3.extent(data, d => d['year']);
+      const dateScale = d3.scaleLinear().domain(dateExtent).range([0, chartWidth]);
+      let bottomAxis = d3.axisBottom(dateScale).tickFormat(d3.format("d"));
+      let bottomGridlines = d3.axisBottom(dateScale)
+        .tickSize(-chartHeight - 10)
+        .tickFormat("");
+      graph.append("g")
+        .attr("class", "x axis")
+        .attr("transform", `translate(${margin.left},${chartHeight + margin.top + 10})`)
+        .call(bottomAxis);
+      graph.append("g")
+        .attr("class", "x gridlines")
+        .attr("transform", `translate(${margin.left},${chartHeight + margin.top + 10})`)
+        .call(bottomGridlines);
+
+      // BPM line
+      var bpmLineGen = d3.line()
+        .x(d => dateScale(d['year']))
+        .y(d => yScale(d['bpm']));
+
+      chartArea.append("path")
+        .datum(data)
+        .attr("class", "line")
+        .attr("fill", "none")
+        .attr("stroke", "#B2BEB5")
+        .attr("stroke-width", 3)
+        .attr("d", bpmLineGen);
+
+      // Energy Line
+      var nrgyLineGen = d3.line()
+        .x(d => dateScale(d['year']))
+        .y(d => yScale(d['nrgy']));
+
+      chartArea.append("path")
+        .datum(data)
+        .attr("class", "line")
+        .attr("fill", "none")
+        .attr("stroke", "limegreen")
+        .attr("stroke-width", 3)
+        .attr("d", nrgyLineGen);
+
+      // Danceability Line
+      var dnceLineGen = d3.line()
+        .x(d => dateScale(d['year']))
+        .y(d => yScale(d['dnce']));
+
+      chartArea.append("path")
+        .datum(data)
+        .attr("class", "line")
+        .attr("fill", "none")
+        .attr("stroke", "black")
+        .attr("stroke-width", 3)
+        .attr("d", dnceLineGen);
+
+      chartArea.selectAll("circle-bpm").data(data)
+        .join("circle")
+        .attr("class", "circle-bpm")
+        .attr("r", 3)
+        .attr("fill", "#B2BEB5")
+        .attr("cx", d => dateScale(d['year']))
+        .attr("cy", d => yScale(d['bpm']));
+
+      chartArea.selectAll("circle-nrgy").data(data)
+        .join("circle")
+        .attr("class", "circle-nrgy")
+        .attr("r", 3)
+        .attr("fill", "limegreen")
+        .attr("cx", d => dateScale(d['year']))
+        .attr("cy", d => yScale(d['nrgy']));
+
+      chartArea.selectAll("circle-dnce").data(data)
+        .join("circle")
+        .attr("class", "circle-dnce")
+        .attr("r", 3)
+        .attr("fill", "black")
+        .attr("cx", d => dateScale(d['year']))
+        .attr("cy", d => yScale(d['dnce']));
+
+      // Mouseover Section 
+      let mouseGroup = chartArea.append("g");
+      let xMarker = mouseGroup.append("line")
+        .attr("id", "xMarker")
+        .attr("fill", "none")
+        .attr("stroke", "black")
+        .attr("stroke-width", 1)
+        .attr("y1", 0)
+        .attr("y2", chartHeight)
+        .attr("visibility", "hidden");
+
+      // Markers for current data point
+      let bpmMarker = mouseGroup.append("circle")
+        .attr("id", "bpmMarker")
+        .attr("fill", "none")
+        .attr("stroke", "#B2BEB5")
+        .attr("stroke-width", 2)
+        .attr("r", 10)
+        .attr("visibility", "hidden");
+
+      let nrgyMarker = mouseGroup.append("circle")
+        .attr("id", "nrgyMarker")
+        .attr("fill", "none")
+        .attr("stroke", "limegreen")
+        .attr("stroke-width", 2)
+        .attr("r", 10)
+        .attr("visibility", "hidden");
+
+      let dnceMarker = mouseGroup.append("circle")
+        .attr("id", "dnceMarker")
+        .attr("fill", "none")
+        .attr("stroke", "black")
+        .attr("stroke-width", 2)
+        .attr("r", 10)
+        .attr("visibility", "hidden");
+
+
+      // Labels for data values
+      let bpmlabel = mouseGroup.append("text")
+        .attr("id", "bpmlabel")
+        .attr("visibility", "hidden");
+
+      let nrgylabel = mouseGroup.append("text")
+        .attr("id", "nrgylabel")
+        .attr("visibility", "hidden");
+
+      let dncelabel = mouseGroup.append("text")
+        .attr("id", "dncelabel")
+        .attr("visibility", "hidden");
+
+      let activeRegion = mouseGroup.append("rect")
+        .attr("id", "activeRegion")
+        .attr("width", chartWidth)
+        .attr("height", chartHeight)
+        .attr("fill", "none")
+        .attr("pointer-events", "all");
+
+      // Circles for data point labels
+      let bpmCircle = mouseGroup.append("circle")
+        .attr("id", "bpm-clabel")
+        .attr("r", 4)
+        .attr("fill", "#B2BEB5");
+
+      let nrgyCircle = mouseGroup.append("circle")
+        .attr("id", "nrgy-clabel")
+        .attr("r", 4)
+        .attr("fill", "limegreen");
+
+      let dnceCircle = mouseGroup.append("circle")
+        .attr("id", "dnce-clabel")
+        .attr("r", 4)
+        .attr("fill", "black");
+
+      // Mouseover events
+      activeRegion.on("mouseover", function () {
+        xMarker.attr("visibility", "");
+        bpmMarker.attr("visibility", "");
+        nrgyMarker.attr("visibility", "");
+        dnceMarker.attr("visibility", "");
+        bpmlabel.attr("visibility", "");
+        nrgylabel.attr("visibility", "");
+        dncelabel.attr("visibility", "");
+        bpmCircle.attr("visibility", "");
+        nrgyCircle.attr("visibility", "");
+        dnceCircle.attr("visibility", "");
+      });
+
+      activeRegion.on("mouseout", function () {
+        xMarker.attr("visibility", "hidden");
+        bpmMarker.attr("visibility", "hidden");
+        nrgyMarker.attr("visibility", "hidden");
+        dnceMarker.attr("visibility", "hidden");
+        bpmlabel.attr("visibility", "hidden");
+        nrgylabel.attr("visibility", "hidden");
+        dncelabel.attr("visibility", "hidden");
+        bpmCircle.attr("visibility", "hidden");
+        nrgyCircle.attr("visibility", "hidden");
+        dnceCircle.attr("visibility", "hidden");
+      });
+
+      let findDate = d3.bisector(d => d.year).right;
+
+      // Move move function
+      activeRegion.on("mousemove", function (evt) {
+
+        let location = d3.pointer(evt);
+        let x = location[0];
+        let xDate = dateScale.invert(x);
+        let index = findDate(data, xDate);
+        let d = data[index];
+
+        let xPos = dateScale(d['year']);
+        let bpmPos = yScale(d['bpm']);
+        let nrgyPos = yScale(d['nrgy']);
+        let dncePos = yScale(d['dnce']);
+
+        xMarker.attr("x1", xPos).attr("x2", xPos);
+        bpmMarker.attr("cx", xPos).attr("cy", bpmPos);
+        nrgyMarker.attr("cx", xPos).attr("cy", nrgyPos);
+        dnceMarker.attr("cx", xPos).attr("cy", dncePos);
+        bpmCircle.attr("cx", xPos + 8).attr("cy", 125);
+        nrgyCircle.attr("cx", xPos + 8).attr("cy", 145);
+        dnceCircle.attr("cx", xPos + 8).attr("cy", 165);
+
+        let format = d3.format(".2f");
+        let bpmtxt = format(d["bpm"]);
+        bpmlabel.text(bpmtxt)
+          .attr("x", xPos + 15)
+          .attr("y", 130)
+          .attr("font-family", "sans-serif")
+          .attr("font-size", "13px");
+
+        let nrgytxt = format(d["nrgy"]);
+        nrgylabel.text(nrgytxt)
+          .attr("x", xPos + 15)
+          .attr("y", 150)
+          .attr("font-family", "sans-serif")
+          .attr("font-size", "13px");
+
+        let dncetxt = format(d["dnce"]);
+        dncelabel.text(dncetxt)
+          .attr("x", xPos + 15)
+          .attr("y", 170)
+          .attr("font-family", "sans-serif")
+          .attr("font-size", "13px");
+
+      });
+
+      svg.append("rect")
+        .attr("x", 600)
+        .attr("y", 20)
+        .attr("width", 110)
+        .attr("height", 70)
+        .attr("stroke", "black")
+        .attr("stroke-width", 1)
+        .attr("fill", "none");
+
+      svg.append("circle")
+        .attr("r", 4)
+        .attr("fill", "#B2BEB5")
+        .attr("cx", 615)
+        .attr("cy", 35);
+
+      svg.append("circle")
+        .attr("r", 4)
+        .attr("fill", "limegreen")
+        .attr("cx", 615)
+        .attr("cy", 55);
+
+      svg.append("circle")
+        .attr("r", 4)
+        .attr("fill", "black")
+        .attr("cx", 615)
+        .attr("cy", 75);
+
+      svg.append("text")
+        .attr("x", 630)
+        .attr("y", 38)
+        .attr("font-family", "sans-serif")
+        .attr("font-size", "13px")
+        .text("BPM");
+
+      svg.append("text")
+        .attr("x", 630)
+        .attr("y", 58)
+        .attr("font-family", "sans-serif")
+        .attr("font-size", "13px")
+        .text("Energy");
+
+      svg.append("text")
+        .attr("x", 630)
+        .attr("y", 78)
+        .attr("font-family", "sans-serif")
+        .attr("font-size", "13px")
+        .text("Danceability");
+
+      svg.append("text")
+        .attr("class", "x label")
+        .attr("text-anchor", "end")
+        .attr("x", (chartWidth / 2) + 80)
+        .attr("y", chartHeight + 110)
+        .text("Year")
+        .style("font-family", "sans-serif");
+
+      svg.append("text")
+        .attr("class", "x label")
+        .attr("text-anchor", "end")
+        .attr("x", (chartWidth / 2) + 240)
+        .attr("y", 30)
+        .text("Average Spotify Song Metrics From 2010 to 2019")
+        .style("font-family", "sans-serif");
+
+      svg.append("text")
+        .attr("text-anchor", "end")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 25)
+        .attr("x", margin.left - 250)
+        .text("Metric Value")
+        .style("font-family", "sans-serif");
+
+    }, (error) => { console.log('Error Loading Data', error); })
+  </script>
+  <svg height="500" width="500" id="vis2"></svg>
+  <script>
+    const svg2 = d3.select("svg#vis2");
+
+  </script>
+</body>
+
 </html>
