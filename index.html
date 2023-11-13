@@ -350,9 +350,137 @@
 
     }, (error) => { console.log('Error Loading Data', error); })
   </script>
-  <svg height="500" width="500" id="vis2"></svg>
+  <h3>Song Metrics for Top 10 Most Streamed Spotify Artists</h3>
+  <div style="display:flex; flex-direction: row;">
+    <svg height="500" width="700" id="vis2"></svg>
+    <div id="filter-buttons" style="display:flex; flex-direction: column;"></div>
+  </div>
   <script>
     const svg2 = d3.select("svg#vis2");
+    let margins = { 'top': 10, 'right': 70, 'bottom': 60, 'left': 45 };
+    const colors = { 'bpm': '#B2BEB5', 'danceability': 'black', 'energy': 'limegreen' };
+    const lightColors = { 'bpm': '#ccdbd0', 'danceability': '#434544', 'energy': '#51c951' };
+    const textColors = { 'bpm': 'black', 'danceability': 'white', 'energy': 'black' };
+    const axisLabels = { 'bpm': 'Beats per Minute', 'danceability': 'Danceability', 'energy': 'Energy' };
+
+    const width = svg2.attr('width');
+    const height = svg2.attr('height');
+    const chartHeight = height - margins.top - margins.bottom;
+    const chartWidth = width - margins.left - margins.right;
+    let annotations = svg2.append("g").attr("id", "annotations");
+    let chartArea = svg2.append("g")
+      .attr("transform", `translate(${margins.left},${margins.top})`);
+
+    d3.json("json-data/vis2-data.json").then((data) => {
+      console.log(data);
+
+      let xScale = d3.scalePoint()
+        .domain(d3.map(data, d => d['artist']))
+        .range([0, chartWidth])
+        .padding(0.05);
+      let bottomAxis = d3.axisBottom(xScale);
+
+      annotations.append("g")
+        .attr("class", "x axis")
+        .call(bottomAxis)
+        .attr("transform", `translate(${margins.left + 10},${chartHeight + margins.top + 10})`)
+        .selectAll("text")
+        .style("text-anchor", "start")
+        .attr("transform", "rotate(20)");
+
+      annotations.append("text")
+        .attr('id', 'yAxisLabel')
+        .attr("text-anchor", "end")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 15)
+        .attr("x", -chartHeight / 2)
+        .style("text-anchor", "middle");
+
+
+      let leftA = d3.axisLeft();
+      let leftAxis = annotations.append("g")
+        .attr("class", "x axis")
+        .attr("transform", `translate(${margins.left},${margins.top})`);
+      let leftG = d3.axisLeft()
+        .tickSize(-chartWidth - 10)
+        .tickFormat("");
+
+      let leftGridlines = annotations.append("g")
+        .attr("class", "y gridlines")
+        .attr("transform", `translate(${margins.left},${margins.top})`);
+
+      function updateBarsAnimated(key) {
+        const ydata = d3.map(data, d => d[key]);
+        const yExtent = d3.extent(ydata);
+        const yScale = d3.scaleLinear()
+          .domain([0, yExtent[1]])
+          .range([chartHeight, 0]);
+
+        leftA.scale(yScale);
+        leftAxis.call(leftA);
+
+        leftG.scale(yScale);
+        leftGridlines.call(leftG);
+
+        d3.select("#yAxisLabel")
+          .text(axisLabels[key])
+
+        let bars = chartArea.selectAll('rect.bar').data(data)
+          .join(
+            enter => enter.append('rect')
+              .attr('class', 'bar')
+              .attr("fill", colors[key])
+              .attr("x", d => xScale(d['artist']))
+              .attr("y", d => yScale(d[key]))
+              .attr("height", d => yScale(0) - yScale(d[key]))
+              .attr("width", 40)
+              .attr("opacity", 0)
+              .call(enter => enter.transition()
+                .attr('opacity', 1)),
+            update => update.call(update => update.transition()
+              .attr("fill", colors[key])
+              .attr("x", d => xScale(d['artist']))
+              .attr("y", d => yScale(d[key]))
+              .attr("height", d => yScale(0) - yScale(d[key]))
+              .attr("width", 40)),
+            exit => exit.call(exit => exit.transition().attr('opacity', 0).remove()));
+        bars.on("mouseover", function () {
+          console.log("here");
+          d3.select(this)
+            .style('fill', d => lightColors[d]);
+        });
+
+        bars.on("mouseout", function () {
+          d3.select(this)
+            .style('fill', this.fill);
+        });
+
+      }
+
+      const keys = ['bpm', 'danceability', 'energy'];
+      keys.forEach(d => {
+        console.log(colors[d]);
+        d3.select("div#filter-buttons")
+          .append("button")
+          .text(d)
+          .style('background-color', colors[d])
+          .style('color', textColors[d])
+          .style('border-radius', '10px')
+          .style('padding-top', '5px')
+          .style('padding-bottom', '5px')
+          .style('margin-top', '5px')
+          .on("click", function () {
+            updateBarsAnimated(d);
+          })
+      });
+      updateBarsAnimated('bpm');
+    });
+
+    // let bars = chartArea.selectAll("rect.bar");
+    // console.log(bars);
+
+
+
 
   </script>
 </body>

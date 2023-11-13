@@ -1,72 +1,72 @@
-{
-  "The Weeknd": {
-    "artist(s)_name": "The Weeknd",
+[
+  {
+    "artist": "The Weeknd",
     "streams": 21516545916,
     "bpm": 118.79411764705883,
-    "danceability_%": 59.61764705882353,
-    "energy_%": 63.64705882352941
+    "danceability": 59.61764705882353,
+    "energy": 63.64705882352941
   },
-  "Bad Bunny": {
-    "artist(s)_name": "Bad Bunny",
+  {
+    "artist": "Bad Bunny",
     "streams": 15363784442,
     "bpm": 119.3076923076923,
-    "danceability_%": 74.15384615384616,
-    "energy_%": 67.03846153846153
+    "danceability": 74.15384615384616,
+    "energy": 67.03846153846153
   },
-  "Ed Sheeran": {
-    "artist(s)_name": "Ed Sheeran",
+  {
+    "artist": "Ed Sheeran",
     "streams": 14559679731,
     "bpm": 115.0,
-    "danceability_%": 71.07692307692308,
-    "energy_%": 62.61538461538461
+    "danceability": 71.07692307692308,
+    "energy": 62.61538461538461
   },
-  "Taylor Swift": {
-    "artist(s)_name": "Taylor Swift",
+  {
+    "artist": "Taylor Swift",
     "streams": 14423238266,
     "bpm": 124.11111111111111,
-    "danceability_%": 60.0,
-    "energy_%": 56.25
+    "danceability": 60.0,
+    "energy": 56.25
   },
-  "Harry Styles": {
-    "artist(s)_name": "Harry Styles",
+  {
+    "artist": "Harry Styles",
     "streams": 11608645649,
     "bpm": 128.52941176470588,
-    "danceability_%": 61.35294117647059,
-    "energy_%": 58.88235294117647
+    "danceability": 61.35294117647059,
+    "energy": 58.88235294117647
   },
-  "Eminem": {
-    "artist(s)_name": "Eminem",
+  {
+    "artist": "Eminem",
     "streams": 10193727260,
     "bpm": 122.55555555555556,
-    "danceability_%": 79.66666666666667,
-    "energy_%": 74.11111111111111
+    "danceability": 79.66666666666667,
+    "energy": 74.11111111111111
   },
-  " Bad Bunny": {
-    "artist(s)_name": " Bad Bunny",
-    "streams": 8449742828,
-    "bpm": 132.57142857142858,
-    "danceability_%": 74.92857142857143,
-    "energy_%": 73.0
-  },
-  "Justin Bieber": {
-    "artist(s)_name": "Justin Bieber",
+  {
+    "artist": "Justin Bieber",
     "streams": 8138018785,
     "bpm": 137.66666666666666,
-    "danceability_%": 65.5,
-    "energy_%": 62.666666666666664
+    "danceability": 65.5,
+    "energy": 62.666666666666664
   },
-  "Drake": {
-    "artist(s)_name": "Drake",
+  {
+    "artist": "Drake",
     "streams": 8043031261,
     "bpm": 133.57894736842104,
-    "danceability_%": 73.6842105263158,
-    "energy_%": 54.68421052631579
+    "danceability": 73.6842105263158,
+    "energy": 54.68421052631579
   },
-  "Imagine Dragons": {
-    "artist(s)_name": "Imagine Dragons",
+  {
+    "artist": "Imagine Dragons",
     "streams": 7719446948,
     "bpm": 114.6,
-    "danceability_%": 66.4,
-    "energy_%": 74.2
+    "danceability": 66.4,
+    "energy": 74.2
+  },
+  {
+    "artist": "Olivia Rodrigo",
+    "streams": 7442148916,
+    "bpm": 162.14285714285714,
+    "danceability": 51.285714285714285,
+    "energy": 50.57142857142857
   }
-}
+]
