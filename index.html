@@ -415,8 +415,6 @@
       .style("font-family", "sans-serif");
 
     d3.json("json-data/vis2-data.json").then((data) => {
-      console.log(data);
-
       // Used scalePoint for x axis as there are discrete categories
       let xScale = d3.scalePoint()
         .domain(d3.map(data, d => d['artist']))
@@ -533,7 +531,6 @@
       // when we select that metric
       const keys = ['bpm', 'energy', 'danceability'];
       keys.forEach(d => {
-        console.log(colors[d]);
         d3.select("div#filter-buttons")
           .append("button")
           .text(d)
