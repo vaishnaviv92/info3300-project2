@@ -350,16 +350,16 @@
 
     }, (error) => { console.log('Error Loading Data', error); })
   </script>
-  <h3>Song Metrics for Top 10 Most Streamed Spotify Artists</h3>
+
   <div style="display:flex; flex-direction: row;">
     <svg height="500" width="700" id="vis2"></svg>
     <div id="filter-buttons" style="display:flex; flex-direction: column;"></div>
   </div>
   <script>
     const svg2 = d3.select("svg#vis2");
-    let margins = { 'top': 10, 'right': 70, 'bottom': 60, 'left': 45 };
+    let margins = { 'top': 50, 'right': 70, 'bottom': 60, 'left': 45 };
     const colors = { 'bpm': '#B2BEB5', 'danceability': 'black', 'energy': 'limegreen' };
-    const lightColors = { 'bpm': '#ccdbd0', 'danceability': '#434544', 'energy': '#51c951' };
+    const lightColors = { 'bpm': '#cad9cd', 'danceability': '#434544', 'energy': '#9bd19b' };
     const textColors = { 'bpm': 'black', 'danceability': 'white', 'energy': 'black' };
     const axisLabels = { 'bpm': 'Beats per Minute', 'danceability': 'Danceability', 'energy': 'Energy' };
 
@@ -370,6 +370,14 @@
     let annotations = svg2.append("g").attr("id", "annotations");
     let chartArea = svg2.append("g")
       .attr("transform", `translate(${margins.left},${margins.top})`);
+    let format2 = d3.format('.1f');
+    svg2.append('text')
+        .text('Song Metrics for Top 10 Most Streamed Spotify Artists')
+        .attr("class", "x label")
+        .attr("text-anchor", "end")
+        .attr("x", (chartWidth / 2) + 240)
+        .attr("y", 30)
+        .style("font-family", "sans-serif");
 
     d3.json("json-data/vis2-data.json").then((data) => {
       console.log(data);
@@ -395,6 +403,9 @@
         .attr("y", 15)
         .attr("x", -chartHeight / 2)
         .style("text-anchor", "middle");
+      
+      annotations.append("text")
+                  .attr('id', 'metricLabel');
 
 
       let leftA = d3.axisLeft();
@@ -424,6 +435,7 @@
 
         d3.select("#yAxisLabel")
           .text(axisLabels[key])
+          .attr("font-family", "sans-serif")
 
         let bars = chartArea.selectAll('rect.bar').data(data)
           .join(
@@ -444,20 +456,36 @@
               .attr("height", d => yScale(0) - yScale(d[key]))
               .attr("width", 40)),
             exit => exit.call(exit => exit.transition().attr('opacity', 0).remove()));
+        
+
         bars.on("mouseover", function () {
-          console.log("here");
+          
           d3.select(this)
-            .style('fill', d => lightColors[d]);
+            .style('fill', lightColors[key]);
+
+          let metricVal = format2(d3.select(this).datum()[key]);
+          let x = d3.select(this).datum()['artist'];
+
+          d3.select('#metricLabel')
+            .text(metricVal)
+            .attr("font-family", "sans-serif")
+            .attr('x', xScale(x) + 47)
+            .attr('y', yScale(metricVal) + 44);
+          
         });
 
         bars.on("mouseout", function () {
           d3.select(this)
-            .style('fill', this.fill);
+            .style('stroke', 'none')
+            .style('fill', d => colors[d]);
+
+          d3.select('#metricLabel')
+            .text("");
         });
 
       }
 
-      const keys = ['bpm', 'danceability', 'energy'];
+      const keys = ['bpm', 'energy', 'danceability'];
       keys.forEach(d => {
         console.log(colors[d]);
         d3.select("div#filter-buttons")
