@@ -7,6 +7,7 @@
 </head>
 
 <style>
+  /* Reduced opacity for clarity with colors */
   .gridlines line {
     stroke: #bbb;
     opacity: 0.4;
@@ -16,6 +17,7 @@
     stroke: none;
   }
 
+  /* Added more margins at bottom for space with text */
   .vis1 {
     margin-bottom: 100px
   }
@@ -24,26 +26,33 @@
 <body>
   <svg height="500" width="750" id="vis1"></svg>
   <script>
+    // Script code for visualization 1
     d3.json('json-data/vis1-grouped-data.json').then((data) => {
       const svg = d3.select('#vis1');
       const width = svg.attr('width');
       const height = svg.attr('height');
+
+      // Chart margins
       const margin = { top: 50, right: 170, bottom: 75, left: 75 };
 
+      // Chart height and width
       const chartWidth = width - margin.left - margin.right;
       const chartHeight = height - margin.top - margin.bottom;
 
+      // Transform and append the graph and chartArea
       let graph = svg.append("g").attr("id", "graph");
       let chartArea = svg.append("g").attr("id", "points")
         .attr("transform", `translate(${margin.left},${margin.top})`);
 
       // Axis for metrics
       const yExtent = [50, 130];
+      // Use Linear Y-Axis
       const yScale = d3.scaleLinear().domain(yExtent).range([chartHeight, 0]);
       let leftAxis = d3.axisLeft(yScale)
       let leftGridlines = d3.axisLeft(yScale)
         .tickSize(-chartWidth - 10)
         .tickFormat("")
+      // Append y axis and y gridlines
       graph.append("g")
         .attr("class", "y axis")
         .attr("transform", `translate(${margin.left - 10},${margin.top})`)
@@ -55,11 +64,14 @@
 
       // Axis for years
       const dateExtent = d3.extent(data, d => d['year']);
+      // Use Linear Scale as it is a range of multiple years
       const dateScale = d3.scaleLinear().domain(dateExtent).range([0, chartWidth]);
+      // Formatted for dates
       let bottomAxis = d3.axisBottom(dateScale).tickFormat(d3.format("d"));
       let bottomGridlines = d3.axisBottom(dateScale)
         .tickSize(-chartHeight - 10)
         .tickFormat("");
+      // Append x axid and x gridlines 
       graph.append("g")
         .attr("class", "x axis")
         .attr("transform", `translate(${margin.left},${chartHeight + margin.top + 10})`)
@@ -74,6 +86,7 @@
         .x(d => dateScale(d['year']))
         .y(d => yScale(d['bpm']));
 
+      // Append BPM Line
       chartArea.append("path")
         .datum(data)
         .attr("class", "line")
@@ -87,6 +100,7 @@
         .x(d => dateScale(d['year']))
         .y(d => yScale(d['nrgy']));
 
+      // Append Energy Line
       chartArea.append("path")
         .datum(data)
         .attr("class", "line")
@@ -100,6 +114,7 @@
         .x(d => dateScale(d['year']))
         .y(d => yScale(d['dnce']));
 
+      // Append Danceability Line
       chartArea.append("path")
         .datum(data)
         .attr("class", "line")
@@ -108,6 +123,7 @@
         .attr("stroke-width", 3)
         .attr("d", dnceLineGen);
 
+      // Creates the circles for each yearly datapoint
       chartArea.selectAll("circle-bpm").data(data)
         .join("circle")
         .attr("class", "circle-bpm")
@@ -133,6 +149,7 @@
         .attr("cy", d => yScale(d['dnce']));
 
       // Mouseover Section 
+      // This creates the markers that appear on corresponding metric lines upon mouseover event
       let mouseGroup = chartArea.append("g");
       let xMarker = mouseGroup.append("line")
         .attr("id", "xMarker")
@@ -237,6 +254,7 @@
       // Move move function
       activeRegion.on("mousemove", function (evt) {
 
+        // Getting the mouse cursor information to append supporting text
         let location = d3.pointer(evt);
         let x = location[0];
         let xDate = dateScale.invert(x);
@@ -280,6 +298,7 @@
 
       });
 
+      // The following code creates the key legend for the visualization
       svg.append("rect")
         .attr("x", 600)
         .attr("y", 20)
@@ -289,6 +308,7 @@
         .attr("stroke-width", 1)
         .attr("fill", "none");
 
+      // Creates the circles of color for each metric
       svg.append("circle")
         .attr("r", 4)
         .attr("fill", "#B2BEB5")
@@ -307,6 +327,7 @@
         .attr("cx", 615)
         .attr("cy", 75);
 
+      // The corresponding metric that is associated with the colors
       svg.append("text")
         .attr("x", 630)
         .attr("y", 38)
@@ -328,6 +349,7 @@
         .attr("font-size", "13px")
         .text("Danceability");
 
+      // Creating the x and y axis labels and title for graph
       svg.append("text")
         .attr("class", "x label")
         .attr("text-anchor", "end")
@@ -358,12 +380,14 @@
     energy, and danceability varied over the range of 2010 to 2019.
   </p>
 
+  <!-- Creates the div for the key legend for Visualization 2, in a stacked column -->
   <div style="display:flex; flex-direction: row;">
     <svg height="500" width="700" id="vis2"></svg>
     <div id="filter-buttons" style="display:flex; flex-direction: column;"></div>
   </div>
   <script>
     const svg2 = d3.select("svg#vis2");
+    // Sets up margins and color/text/axis dictionaries for Visualization 2
     let margins = { 'top': 50, 'right': 70, 'bottom': 60, 'left': 45 };
     const colors = { 'bpm': '#B2BEB5', 'danceability': 'black', 'energy': 'limegreen' };
     const lightColors = { 'bpm': '#cad9cd', 'danceability': '#434544', 'energy': '#9bd19b' };
@@ -372,12 +396,16 @@
 
     const width = svg2.attr('width');
     const height = svg2.attr('height');
+
+    // Chart height/width calculations
     const chartHeight = height - margins.top - margins.bottom;
     const chartWidth = width - margins.left - margins.right;
     let annotations = svg2.append("g").attr("id", "annotations");
     let chartArea = svg2.append("g")
       .attr("transform", `translate(${margins.left},${margins.top})`);
     let format2 = d3.format('.1f');
+
+    // Append chart title
     svg2.append('text')
       .text('Song Metrics for Top 10 Most Streamed Spotify Artists')
       .attr("class", "x label")
@@ -389,12 +417,14 @@
     d3.json("json-data/vis2-data.json").then((data) => {
       console.log(data);
 
+      // Used scalePoint for x axis as there are discrete categories
       let xScale = d3.scalePoint()
         .domain(d3.map(data, d => d['artist']))
         .range([0, chartWidth])
         .padding(0.05);
       let bottomAxis = d3.axisBottom(xScale);
 
+      // Append all axis labels
       annotations.append("g")
         .attr("class", "x axis")
         .call(bottomAxis)
@@ -423,10 +453,12 @@
         .tickSize(-chartWidth - 10)
         .tickFormat("");
 
+      // Append y gridlines
       let leftGridlines = annotations.append("g")
         .attr("class", "y gridlines")
         .attr("transform", `translate(${margins.left},${margins.top})`);
 
+      // Function to update the bars based on which metric is selected
       function updateBarsAnimated(key) {
         const ydata = d3.map(data, d => d[key]);
         const yExtent = d3.extent(ydata);
@@ -434,6 +466,7 @@
           .domain([0, yExtent[1]])
           .range([chartHeight, 0]);
 
+        // Update the axis and gridlines
         leftA.scale(yScale);
         leftAxis.call(leftA);
 
@@ -444,6 +477,7 @@
           .text(axisLabels[key])
           .attr("font-family", "sans-serif")
 
+        // Updates the bars on chart
         let bars = chartArea.selectAll('rect.bar').data(data)
           .join(
             enter => enter.append('rect')
@@ -467,12 +501,14 @@
 
         bars.on("mouseover", function () {
 
+          // The highlighted bar fills with the associated lighter color
           d3.select(this)
             .style('fill', lightColors[key]);
 
           let metricVal = format2(d3.select(this).datum()[key]);
           let x = d3.select(this).datum()['artist'];
 
+          // Display the numeric y value 
           d3.select('#metricLabel')
             .text(metricVal)
             .attr("font-family", "sans-serif")
@@ -481,6 +517,7 @@
 
         });
 
+        // On mouseout, return to normal bar color and no text
         bars.on("mouseout", function () {
           d3.select(this)
             .style('stroke', 'none')
@@ -492,6 +529,8 @@
 
       }
 
+      // For each song metric, we add the updateBarsAnimated function that is called
+      // when we select that metric
       const keys = ['bpm', 'energy', 'danceability'];
       keys.forEach(d => {
         console.log(colors[d]);
