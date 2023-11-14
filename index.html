@@ -392,7 +392,7 @@
     const colors = { 'bpm': '#B2BEB5', 'danceability': 'black', 'energy': 'limegreen' };
     const lightColors = { 'bpm': '#cad9cd', 'danceability': '#434544', 'energy': '#9bd19b' };
     const textColors = { 'bpm': 'black', 'danceability': 'white', 'energy': 'black' };
-    const axisLabels = { 'bpm': 'Beats per Minute', 'danceability': 'Danceability', 'energy': 'Energy' };
+    const axisLabels = { 'bpm': 'BPM', 'danceability': 'Danceability', 'energy': 'Energy' };
 
     const width = svg2.attr('width');
     const height = svg2.attr('height');
@@ -533,7 +533,7 @@
       keys.forEach(d => {
         d3.select("div#filter-buttons")
           .append("button")
-          .text(d)
+          .text(axisLabels[d])
           .style('background-color', colors[d])
           .style('color', textColors[d])
           .style('border-radius', '10px')
