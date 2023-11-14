@@ -15,6 +15,10 @@
   .gridlines .domain {
     stroke: none;
   }
+
+  .vis1 {
+    margin-bottom: 100px
+  }
 </style>
 
 <body>
@@ -347,9 +351,12 @@
         .attr("x", margin.left - 250)
         .text("Metric Value")
         .style("font-family", "sans-serif");
-
     }, (error) => { console.log('Error Loading Data', error); })
   </script>
+  <!-- Supporting explanation for visualization 1 -->
+  <p> This visualization demonstrates how various Spotify song metadata, specifically, BPM,
+    energy, and danceability varied over the range of 2010 to 2019.
+  </p>
 
   <div style="display:flex; flex-direction: row;">
     <svg height="500" width="700" id="vis2"></svg>
@@ -372,12 +379,12 @@
       .attr("transform", `translate(${margins.left},${margins.top})`);
     let format2 = d3.format('.1f');
     svg2.append('text')
-        .text('Song Metrics for Top 10 Most Streamed Spotify Artists')
-        .attr("class", "x label")
-        .attr("text-anchor", "end")
-        .attr("x", (chartWidth / 2) + 240)
-        .attr("y", 30)
-        .style("font-family", "sans-serif");
+      .text('Song Metrics for Top 10 Most Streamed Spotify Artists')
+      .attr("class", "x label")
+      .attr("text-anchor", "end")
+      .attr("x", (chartWidth / 2) + 240)
+      .attr("y", 30)
+      .style("font-family", "sans-serif");
 
     d3.json("json-data/vis2-data.json").then((data) => {
       console.log(data);
@@ -403,9 +410,9 @@
         .attr("y", 15)
         .attr("x", -chartHeight / 2)
         .style("text-anchor", "middle");
-      
+
       annotations.append("text")
-                  .attr('id', 'metricLabel');
+        .attr('id', 'metricLabel');
 
 
       let leftA = d3.axisLeft();
@@ -456,10 +463,10 @@
               .attr("height", d => yScale(0) - yScale(d[key]))
               .attr("width", 40)),
             exit => exit.call(exit => exit.transition().attr('opacity', 0).remove()));
-        
+
 
         bars.on("mouseover", function () {
-          
+
           d3.select(this)
             .style('fill', lightColors[key]);
 
@@ -471,7 +478,7 @@
             .attr("font-family", "sans-serif")
             .attr('x', xScale(x) + 47)
             .attr('y', yScale(metricVal) + 44);
-          
+
         });
 
         bars.on("mouseout", function () {
@@ -503,14 +510,11 @@
       });
       updateBarsAnimated('bpm');
     });
-
-    // let bars = chartArea.selectAll("rect.bar");
-    // console.log(bars);
-
-
-
-
   </script>
+  <!-- Supporting explanation for visualization 2 -->
+  <p> This visualization displays the same 3 song metadata metrics -- bpm,
+    danceability, and energy -- for each of the top 10 streamed Spotify artists in 2013.
+  </p>
 </body>
 
 </html>
